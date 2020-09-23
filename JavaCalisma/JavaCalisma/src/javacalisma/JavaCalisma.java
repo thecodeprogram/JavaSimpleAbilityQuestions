@@ -33,7 +33,12 @@ public class JavaCalisma {
         
         //selectionSortImplemention();
         
-        findOddTimesUsedNumberInArray();
+        //findOddTimesUsedNumberInArray();
+        //findFrequencyOfNumbersInArray();
+        //seperateOddEvenNumbersInArray();
+        //findAllPairsThatSumIsEqualToGivenNumber();
+        
+        getShortestUniqueCharacter();
         
         
     }
@@ -290,7 +295,174 @@ public class JavaCalisma {
         System.out.println("Odd times used number :" + oddTimesUsedNumber  );
         
     }
+   
+    public static void findFrequencyOfNumbersInArray(){
+        int[] array = {0, 0, 1, 1, 1, 3, 3, 4, 5, 5, 6, 6, 8, 9, 10, 10};
+        String output = "";
+        //standart arrays have static value
+        //so I assigned as 1 and I will increase when needed
+        int[] distinctNumbers = new int[1];
+        //flag to control added data
+        boolean wasAdded;
+        //first data should be added
+        distinctNumbers[0] = array[0];
+        //find the distinct values
+        for(int i=1; i<array.length; i++){
+            wasAdded = false;
+            int currentValue = array[i];
+            for(int j=0;j<distinctNumbers.length;j++){
+                if(currentValue == distinctNumbers[j]){
+                    wasAdded = true;
+                }
+            }
+            if(!wasAdded) {
+                //increase the array size,
+                //create new array with +1 size and hold before datas in it
+                int[] temp = new int[distinctNumbers.length + 1];
+                for(int j=0; j<distinctNumbers.length; j++){
+                    temp[j] = distinctNumbers[j];
+                }
+                //assign the old values array to new array
+                distinctNumbers = temp;
+                //then add last found data in it.
+                distinctNumbers[distinctNumbers.length - 1] = currentValue;
+            }
+        }
+        //Now count frequency of above distinct datas
+        //we will save the frequencies at same indexes of counted number
+        int[] frequencies = new int[distinctNumbers.length];
+        int frequencyCounter = 0;
+        
+        for(int i=0; i<distinctNumbers.length; i++){
+            frequencyCounter = 0;
+            int selectedNumber = distinctNumbers[i];
+            for(int j=0; j<array.length; j++){
+                if(selectedNumber == array[j]) frequencyCounter++;
+            }
+            frequencies[i] = frequencyCounter;
+        }
+
+        for(int i=0; i<distinctNumbers.length; i++){
+            output += distinctNumbers[i] + ", ";
+        }
+        System.out.println("Distinct numbers in array :" + output  ); 
+        
+        System.out.println("Below you can see the frequencies of numbers :"); 
+        for(int i=0; i<distinctNumbers.length; i++){
+            System.out.println(distinctNumbers[i] + " : " + frequencies[i]); 
+        }
+        
+    }
     
+    public static void seperateOddEvenNumbersInArray(){
+        
+        int[] array = {1,2,4,5,8,9,11,12,13,15,16,19,22,26,28,30,33,41};
+        //first we should count odd and even numbers
+        //because the array sizes will be static
+        //so we are going to find the sizes first
+        int oddCounter=0, evenCounter=0;
+        for(int i=0; i<array.length; i++)
+        {
+            if(array[i] % 2 == 0) evenCounter++;
+            else oddCounter++;
+        }
+        
+        int[] oddArray = new int[oddCounter];
+        int[] evenArray = new int[evenCounter];
+        
+        int oddIndex=0, evenIndex=0;
+        
+        for(int i=0; i<array.length; i++)
+        {
+            if(array[i] % 2 == 0) {evenArray[evenIndex] = array[i]; evenIndex++;}
+            else{ oddArray[oddIndex] = array[i]; oddIndex++;}
+        }
+        
+        String output = "Even Numbers : ";
+        
+        for(int i=0; i<evenCounter; i++) output += evenArray[i] + ", ";
+        output += "\nOdd Numbers : ";
+        for(int i=0; i<oddCounter; i++) output += oddArray[i] + ", ";
+        
+        System.out.println(output);
     
+    }
+ 
+    public static void findAllPairsThatSumIsEqualToGivenNumber(){
+    
+        int[] array = {1,2,4,5,8,9,11,12,-13,15,-16,19,22,-26,28,30,7,33,35,0};
+        int givenSummarize = 9;
+        
+        //create an zero sized array...
+        int[][] pairs = new int[0][2];
+        
+        for(int i=0; i<array.length; i++)
+        {
+            int selectedNumber = array[i];
+            for(int j=i+1; j<array.length; j++){
+                if(selectedNumber + array[j] == givenSummarize)
+                {
+                    int[][] temp = new int[pairs.length + 1][2];
+                    for(int k=0; k<pairs.length; k++){
+                        temp[k] = pairs[k];
+                    }
+                    pairs = temp;
+                    pairs[pairs.length - 1][0] = selectedNumber;
+                    pairs[pairs.length - 1][1] = array[j];
+                }
+            }
+        }
+        
+        String output = "";
+        for(int i=0; i<pairs.length; i++){
+            output += pairs[i][0] + " and " + pairs[i][1] + "\n"; 
+        }
+        System.out.println(output);
+    }
+    
+    public static void getShortestUniqueCharacter(){
+        //FIND THE SHORTEST SUBSTRING IN STR WHICH CONTAINS ALL CHARS IN ARR
+        
+        char[] arr = {'x','y','z'};
+        String str = "xyyzyzzyx";
+        
+        //start to control from zero indez
+        int startIndex = 0;
+        //the found substring must have char count at least array size
+        int endIndex = startIndex + arr.length;
+        String foundSubstring = "";
+        String resultShortestSubstring = str;
+        //substring is found flag
+        boolean isOk = true;
+
+        //I will use all chars from begining to start control
+        for(int i=0; i<=str.length() ; i++){
+            startIndex = i;
+            //create substring from specified start and end indexes
+             for(int j=i+1; j<=str.length(); j++){
+                isOk = true;
+                endIndex = j;
+                foundSubstring = str.substring(startIndex, endIndex);
+                //control the substring with given array
+                for(int k=0; k<arr.length; k++){
+                    //if not exist set flag to false
+                    if(foundSubstring.indexOf(arr[k]) < 0){
+                        isOk = false;
+                    }
+                }
+                //ıf all is okay 
+                if(isOk){
+                    //control the lenght of found substring with lastfound one
+                    if(foundSubstring.length() < resultShortestSubstring.length())
+                        resultShortestSubstring = foundSubstring;
+               }
+            }
+        }
+         System.out.println(resultShortestSubstring);
+    }
+    
+
     
 }
+
+
